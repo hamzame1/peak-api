@@ -1,6 +1,7 @@
 from django.db import models
-from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, \
-    PermissionsMixin
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
+from django.conf import settings
+
 class UserManager(BaseUserManager):
 
     def create_user(self, email, password=None, **extra_fields):
@@ -20,8 +21,7 @@ class UserManager(BaseUserManager):
         user.save(using=self._db)
 
         return user
-
-
+        
 class User(AbstractBaseUser, PermissionsMixin):
     """Custom user model that supports using email instead of username"""
     email = models.EmailField(max_length=255, unique=True)
@@ -32,3 +32,14 @@ class User(AbstractBaseUser, PermissionsMixin):
     objects = UserManager()
 
     USERNAME_FIELD = 'email'
+class Peak(models.Model):
+    """Tag to be used for a recipe"""
+
+    lat = models.FloatField()
+    lon = models.FloatField()
+    altitude = models.FloatField()
+
+    name = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.name
